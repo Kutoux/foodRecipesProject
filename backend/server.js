@@ -9,7 +9,7 @@ app.use("/recipe", require("./routes/recipe"))
 
 connectDb()
 
-
+app.use(express.json())
 
 app.listen(PORT, (err) => {
     console.log(`App is listening on port ${PORT}`)
