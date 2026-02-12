@@ -1,0 +1,6 @@
+{
+	"title":"Homemade Pancakes",
+	"ingredients":"['2 cups all purpose flour', '2 teaspoons baking powder', '1/4 teaspoon salt', '1 tablespoon granulated sugar', '1 large egg', '3 tablespoons butter, melted then allowed to cool slightly', '2 teaspoons vanilla extract', '1.5 cups of milk']",
+	"instructions":"1) In a large bowl, mix together all dry ingredients.\n2) Add the wet ingredients and mix everything together (can separate egg and yolk then fold). Be careful not to overmix.\n3) Let the batter rest for 10-15 minutes.\n4) Heat a non-stick pan or skillet over low-medium heat. Let it heat up for a minute or two.\n5) Pour about 1/4 cup of batter into the pan.\n6) Let your pancake cook for a minute or two, until the underside is golden brown and a few small bubbles appear on the top.\n7) Gently but quickly flip over your pancake and cook for another minute or so until that side is also golden brown.\n8) Serve and enjoy!",
+	"time":"30 minutes"
+}
