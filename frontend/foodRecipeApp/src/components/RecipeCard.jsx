@@ -32,7 +32,7 @@ export default function RecipeCard({ recipe, onDelete }) {
           />
         )}
 
-        {/* Ingredients preview */}
+        {/* Ingredients*/}
         <Typography variant="body2" color="text.secondary">
           {Array.isArray(recipe.ingredients)
             ? recipe.ingredients.slice(0, 3).join(", ")

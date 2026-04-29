@@ -12,7 +12,10 @@ const PORT = process.env.PORT || 5000;
 connectDb()
 
 app.use(cors({
-  origin: "http://localhost:5173"
+  origin: [
+    "http://localhost:5173",
+    "https://your-frontend-domain.com"
+  ]
 }));
 
 app.use(express.json())

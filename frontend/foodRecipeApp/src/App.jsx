@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { getRecipes, deleteRecipe } from "./api/recipes";
+
 import {
   ThemeProvider,
   CssBaseline,
@@ -18,12 +19,12 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 🌐 Fetch recipes
+  //Fetch recipes
   useEffect(() => {
     async function fetchRecipes() {
       try {
-        const res = await axios.get("http://localhost:5000/recipe");
-        setRecipes(res.data);
+        const res = await getRecipes();
+        setRecipes(res);
       } catch (err) {
         console.error(err);
         setError("Failed to load recipes");
@@ -35,7 +36,7 @@ export default function App() {
     fetchRecipes();
   }, []);
 
-  // 🎨 Theme
+  // Theme
   const theme = createTheme({
     palette: {
       mode: darkMode ? "dark" : "light",
@@ -46,16 +47,16 @@ export default function App() {
     }
   });
 
-  // ➕ Add recipe
+  // Add recipe
   const handleRecipeAdded = (newRecipe) => {
     setRecipes(prev => [newRecipe, ...prev]);
   };
 
-  // 🗑 Delete recipe
+  // Delete recipe
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/recipe/${id}`);
-      setRecipes(prev => prev.filter(r => r._id !== id));
+      await deleteRecipe(id);
+      setRecipes(prev => prev.filter(selectedRecipe => selectedRecipe._id !== id));
     } catch (err) {
       console.error("Delete failed:", err);
     }

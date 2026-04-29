@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { addRecipe } from "../api/recipes";
 
 import {
   TextField,
@@ -28,35 +28,32 @@ export default function AddRecipeForm({ onRecipeAdded }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!form.title || !form.ingredients || !form.instructions) {
-      setError("Please fill all required fields");
-      return;
-    }
+  if (!form.title || !form.ingredients || !form.instructions) {
+    setError("Please fill all required fields");
+    return;
+  }
 
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/recipe",
-        form
-      );
+  try {
+    const data = await addRecipe(form);
 
-      onRecipeAdded(res.data);
+    onRecipeAdded(data);
 
-      setForm({
-        title: "",
-        ingredients: "",
-        instructions: "",
-        time: ""
-      });
+    setForm({
+      title: "",
+      ingredients: "",
+      instructions: "",
+      time: ""
+    });
 
-      setError(null);
+    setError(null);
 
-    } catch (err) {
-      console.error(err);
-      setError("Failed to add recipe");
-    }
-  };
+  } catch (err) {
+    console.error(err);
+    setError("Failed to add recipe");
+  }
+};
 
   return (
     <Paper

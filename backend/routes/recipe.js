@@ -8,8 +8,9 @@ router.post("/", addRecipe) //adds one recipe
 router.put("/:id", editRecipe) //edits one recipe
 router.delete("/:id", deleteRecipe) //deletes one recipe
 
-router.get("/test", (req, res) => {
-  res.json({ message: "route works" });
-});
+// router.get("/test", (req, res) => {
+//   res.json({ message: "route works" });
+// });
+
 
 module.exports = router;
