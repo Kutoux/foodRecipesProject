@@ -13,7 +13,7 @@ const addRecipe = async (req, res) => {
     const {title, ingredients, instructions, time} = req.body
 
         if(!title || !ingredients || !instructions){
-            res.json({message:"Required fields can't be empty"})
+            return res.json({message:"Required fields can't be empty"})
         }
     
         const newRecipe = await Recipes.create({
@@ -24,19 +24,39 @@ const addRecipe = async (req, res) => {
 }
 
 const editRecipe = async (req, res) => {
-    const {title, ingredients, instructions, time} = req.body
-    let recipe = await Recipes.findById(req.params.id)
-    try{
-        if(recipe){
-            await Recipes.findByIdAndUpdate(req.params.id, req.body, {new:true})
-            res.json({title, ingredients, instructions, time})
-        }
+  const { title, ingredients, instructions, time } = req.body;
+
+  //validation
+  if (!title || !ingredients || !instructions) {
+    return res.status(400).json({
+      message: "Required fields can't be empty"
+    });
+  }
+
+  try {
+    const updated = await Recipes.findByIdAndUpdate(
+      req.params.id,
+      { title, ingredients, instructions, time },
+      { new: true }
+    );
+
+    //handle not found
+    if (!updated) {
+      return res.status(404).json({
+        message: "Recipe not found"
+      });
     }
-    catch(err){
-        return res.status(404).json({message:"error, not in database"
-        })
-    }
-}
+
+    //return actual updated document
+    return res.json(updated);
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      message: "Server error"
+    });
+  }
+};
 
 const deleteRecipe = (req, res) => {
     res.json({message: "hello"})
