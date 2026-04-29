@@ -1,47 +1,13 @@
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-
-// export default function App() {
-//   const [recipes, setRecipes] = useState([]);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     async function fetchRecipes() {
-//       try {
-//         const res = await axios.get("http://localhost:5000/recipe");
-//         console.log("DATA:", res.data);
-//         setRecipes(res.data);
-//       } catch (err) {
-//         console.error(err);
-//         setError("Failed to load recipes");
-//       }
-//     }
-
-//     fetchRecipes();
-//   }, []);
-
-//   if (error) return <h2>{error}</h2>;
-
-//   return (
-//     <div>
-//       <h1>Recipes</h1>
-
-//       {recipes.length === 0 ? (
-//         <p>No recipes found</p>
-//       ) : (
-//         recipes.map((r) => (
-//           <div key={r._id}>
-//             <h3>{r.title}</h3>
-//             <p>{r.ingredients}</p>
-//           </div>
-//         ))
-//       )}
-//     </div>
-//   );
-// }
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ThemeProvider, CssBaseline, createTheme, Button } from "@mui/material";
+import {
+  ThemeProvider,
+  CssBaseline,
+  createTheme,
+  Button,
+  Container,
+  Typography
+} from "@mui/material";
 
 import AddRecipeForm from "./components/AddRecipeForm";
 import RecipeList from "./components/RecipeList";
@@ -49,12 +15,27 @@ import RecipeList from "./components/RecipeList";
 export default function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // 🌐 Fetch recipes
   useEffect(() => {
-    axios.get("http://localhost:5000/recipe")
-      .then(res => setRecipes(res.data));
+    async function fetchRecipes() {
+      try {
+        const res = await axios.get("http://localhost:5000/recipe");
+        setRecipes(res.data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load recipes");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchRecipes();
   }, []);
 
+  // 🎨 Theme
   const theme = createTheme({
     palette: {
       mode: darkMode ? "dark" : "light",
@@ -65,23 +46,55 @@ export default function App() {
     }
   });
 
-  //called after adding a recipe
+  // ➕ Add recipe
   const handleRecipeAdded = (newRecipe) => {
     setRecipes(prev => [newRecipe, ...prev]);
+  };
+
+  // 🗑 Delete recipe
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/recipe/${id}`);
+      setRecipes(prev => prev.filter(r => r._id !== id));
+    } catch (err) {
+      console.error("Delete failed:", err);
+    }
   };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-        <div style={{ padding: 20 }}>
 
-        <Button onClick={() => setDarkMode(!darkMode)}>
-          Toggle Mode
+      <Container sx={{ py: 4 }}>
+        {/* Header */}
+        <Typography variant="h4" sx={{ mb: 2 }}>
+          Recipe App
+        </Typography>
+
+        {/* Dark mode toggle */}
+        <Button
+          variant="outlined"
+          onClick={() => setDarkMode(!darkMode)}
+          sx={{ mb: 3 }}
+        >
+          Toggle {darkMode ? "Light" : "Dark"} Mode
         </Button>
+
+        {/* Form */}
         <AddRecipeForm onRecipeAdded={handleRecipeAdded} />
 
-        <RecipeList recipes={recipes} />
-      </div>
+        {/* Loading / Error */}
+        {loading && <Typography>Loading...</Typography>}
+        {error && <Typography color="error">{error}</Typography>}
+
+        {/* Recipe list */}
+        {!loading && !error && (
+          <RecipeList
+            recipes={recipes}
+            onDelete={handleDelete}
+          />
+        )}
+      </Container>
     </ThemeProvider>
   );
 }

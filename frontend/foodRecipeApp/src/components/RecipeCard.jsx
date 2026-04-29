@@ -1,17 +1,52 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  CardActions,
+  Button,
+  Chip,
+  Stack
+} from "@mui/material";
 
-export default function RecipeCard({ recipe }) {
+export default function RecipeCard({ recipe, onDelete }) {
   return (
-    <Card sx={{ marginBottom: 2 }}>
+    <Card
+      sx={{
+        backgroundColor: "background.paper",
+        borderRadius: 3,
+        boxShadow: 3
+      }}
+    >
       <CardContent>
-        <Typography variant="h6">
+        {/* Title */}
+        <Typography variant="h6" gutterBottom>
           {recipe.title}
         </Typography>
 
-        <Typography variant="body2">
-          {recipe.description}
+        {/* Time */}
+        {recipe.time && (
+          <Chip
+            label={`${recipe.time} min`}
+            size="small"
+            sx={{ mb: 1 }}
+          />
+        )}
+
+        {/* Ingredients preview */}
+        <Typography variant="body2" color="text.secondary">
+          {Array.isArray(recipe.ingredients)
+            ? recipe.ingredients.slice(0, 3).join(", ")
+            : recipe.ingredients}
         </Typography>
       </CardContent>
+
+      {/* Actions */}
+      <CardActions>
+        <Button size="small">View</Button>
+        <Button size="small" color="error" onClick={() => onDelete(recipe._id)}>
+          Delete
+        </Button>
+      </CardActions>
     </Card>
   );
 }
